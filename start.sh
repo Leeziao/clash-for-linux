@@ -180,13 +180,13 @@ echo -e "Clash Dashboard 访问地址: http://<ip>:9090/ui"
 echo -e "Secret: ${Secret}"
 echo ''
 
-# 添加环境变量(root权限)
-cat>/etc/profile.d/clash.sh<<EOF
+# 添加环境变量
+cat>~/clash.sh<<EOF
 # 开启系统代理
 function proxy_on() {
 	export http_proxy=http://127.0.0.1:7890
 	export https_proxy=http://127.0.0.1:7890
-	export no_proxy=127.0.0.1,localhost
+	export all_proxy=socks5://127.0.0.1:7890
 	echo -e "\033[32m[√] 已开启代理\033[0m"
 }
 
@@ -194,11 +194,14 @@ function proxy_on() {
 function proxy_off(){
 	unset http_proxy
 	unset https_proxy
-	unset no_proxy
+	unset all_proxy
 	echo -e "\033[31m[×] 已关闭代理\033[0m"
 }
 EOF
 
-echo -e "请执行以下命令加载环境变量: source /etc/profile.d/clash.sh\n"
+if [ -f ~/.zshrc ]; then echo "source ~/clash.sh" >> ~/.zshrc; fi
+if [ -f ~/.bashrc ]; then echo "source ~/clash.sh" >> ~/.bashrc; fi
+
+echo -e "请执行以下命令加载环境变量: source ~/clash.sh\n"
 echo -e "请执行以下命令开启系统代理: proxy_on\n"
 echo -e "若要临时关闭系统代理，请执行: proxy_off\n"

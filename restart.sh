@@ -47,12 +47,22 @@ Text2="服务关闭失败！"
 # 查询并关闭程序进程
 PID_NUM=`ps -ef | grep [c]lash-linux-a | wc -l`
 PID=`ps -ef | grep [c]lash-linux-a | awk '{print $2}'`
+ReturnStatus=0
 if [ $PID_NUM -ne 0 ]; then
 	kill -9 $PID
   ReturnStatus=$?
 	# ps -ef | grep [c]lash-linux-a | awk '{print $2}' | xargs kill -9
 fi
-if_success $Text1 $Text2 $ReturnStatus
+
+if [ $ReturnStatus -eq 0 ]; then
+  echo -n "$Text1 "
+  success $Text1
+else
+  echo -n "$Text2 "
+  failure $Text2
+fi
+echo
+# if_success $Text1 $Text2 $ReturnStatus
 
 sleep 3
 
